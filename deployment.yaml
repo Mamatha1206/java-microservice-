@@ -13,7 +13,7 @@ spec:
         app: java-app
     spec:
       containers:
-        - name: java-app
-          image: mamatha0124/java-app:latest
-          ports:
-            - containerPort: 8080
+      - name: java-app
+        image: mamatha0124/java-app:latest
+        ports:
+        - containerPort: 5000  # Updated port
