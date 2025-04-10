@@ -7,6 +7,6 @@ spec:
     app: java-app
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 8080
-  type: ClusterIP
+      port: 5000  # Exposed port
+      targetPort: 5000  # Container's internal port
+  type: LoadBalancer
