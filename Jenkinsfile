@@ -1,44 +1,54 @@
 pipeline {
     agent any
+
     environment {
-        IMAGE_NAME = "mamatha0124/java-app"
+        DOCKER_IMAGE = "mamatha0124/your-app" // Update this to your Docker Hub image name
     }
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                checkout scm
             }
         }
 
-        stage('Test') {
+        stage('Build and Test') {
             steps {
-                sh 'mvn test'
+                sh 'mvn clean install'
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Docker Build and Push') {
             when {
                 branch 'develop'
             }
             steps {
-                script {
-                    dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
-                    docker.withRegistry('', 'DOCKER_CREDENTIALS_ID') {
-                        dockerImage.push()
-                        dockerImage.push('latest')
-                    }
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS_ID', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                    sh """
+                        docker build -t $DOCKER_IMAGE:${env.BUILD_NUMBER} .
+                        echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+                        docker push $DOCKER_IMAGE:${env.BUILD_NUMBER}
+                    """
                 }
             }
         }
 
-        stage('Kubernetes Deploy') {
+        stage('Deploy to Kubernetes') {
             when {
                 branch 'develop'
             }
             steps {
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl apply -f service.yaml'
+                sh """
+                    kubectl apply -f k8s/deployment.yaml
+                    kubectl apply -f k8s/service.yaml
+                """
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
