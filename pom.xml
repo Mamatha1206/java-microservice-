@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -9,11 +10,28 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <!-- Add dependencies here (if any) -->
+        <!-- Example dependencies (if any needed) -->
+        <!-- Add dependencies for testing, logging, or other libraries here -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>  <!-- Set Java version 8 -->
+                    <target>1.8</target>  <!-- Set Java version 8 -->
+                </configuration>
+            </plugin>
+            <!-- Maven Jar Plugin to create a runnable JAR with main class -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -21,7 +39,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>com.example.Main</Main-Class> <!-- This points to your Main class -->
+                            <Main-Class>com.example.Main</Main-Class> <!-- Your main class -->
                         </manifestEntries>
                     </archive>
                 </configuration>
