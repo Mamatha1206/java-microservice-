@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     dockerImage = docker.build("${IMAGE_NAME}:${env.BUILD_NUMBER}")
-                    docker.withRegistry('', 'dockerhub-credentials') {
+                    docker.withRegistry('', 'DOCKER_CREDENTIALS_ID') {
                         dockerImage.push()
                         dockerImage.push('latest')
                     }
